@@ -5,18 +5,9 @@ import {
   SkipBack,
   SkipForward,
 } from '@phosphor-icons/react';
-import * as Progress from '@radix-ui/react-progress';
 import * as Slider from '@radix-ui/react-slider';
-import { useEffect, useState } from 'react';
 
 export const MusicPlayerControl: React.FC = () => {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setProgress(50), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <div>
       <div className='flex items-center justify-center space-x-5'>
