@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react';
 import { SidebarButton } from '../buttons/SidebarButton';
 
 export const Sidebar: React.FC<{ className: string }> = ({ className }) => {

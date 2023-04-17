@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className='w-full p-4 space-y-4 h-max bg-slate-900'>
+    <div className='w-full p-4 pt-0 space-y-4 h-max bg-slate-900'>
       <div>
         <h1 className='text-3xl font-bold select-none'>Jump back in</h1>
         <h2 className='select-none text-slate-300'>
