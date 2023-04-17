@@ -118,7 +118,7 @@ export const SignIn: React.FC = () => {
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <Dialog.Trigger asChild>
-        <AuthButton>Sign In</AuthButton>
+        <AuthButton data-cy='sign-in-button'>Sign In</AuthButton>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className='fixed inset-0 bg-black opacity-50' />
@@ -146,11 +146,12 @@ export const SignIn: React.FC = () => {
                   }}
                   type='email'
                   required
+                  data-cy='sign-in-email-input'
                 />
               </div>
               {emailError && (
                 <div className='w-full text-red-400 text-end'>
-                  <span>{emailError}</span>
+                  <span data-cy='sign-in-email-error'>{emailError}</span>
                 </div>
               )}
             </fieldset>
@@ -173,7 +174,7 @@ export const SignIn: React.FC = () => {
               </div>
               {passwordError && (
                 <div className='w-full text-red-400 text-end'>
-                  <span>{passwordError}</span>
+                  <span data-cy='sign-in-password-error'>{passwordError}</span>
                 </div>
               )}
             </fieldset>
@@ -187,9 +188,13 @@ export const SignIn: React.FC = () => {
                 <CircleNotch
                   className='animate-spin animate-fade-in'
                   size={20}
+                  data-cy='sign-in-loading'
                 />
               )}
-              <button className='inline-flex items-center justify-center h-4 p-4 bg-green-600 rounded-md w-28'>
+              <button
+                className='inline-flex items-center justify-center h-4 p-4 bg-green-600 rounded-md w-28'
+                data-cy='sign-in-submit-button'
+              >
                 Sign In
               </button>
             </div>

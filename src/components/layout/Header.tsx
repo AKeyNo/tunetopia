@@ -24,7 +24,9 @@ export const Header: React.FC<{
         </>
       ) : (
         <div className='flex items-center space-x-2'>
-          <p>{user.user_metadata.username}</p>
+          <p data-cy={`user-username-${user.user_metadata.username}`}>
+            {user.user_metadata.username}
+          </p>
           <SignOut />
         </div>
       )}

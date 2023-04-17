@@ -182,7 +182,10 @@ export const SignUp: React.FC = () => {
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <Dialog.Trigger asChild>
-        <button className='inline-flex items-center justify-center h-4 p-4 duration-150 rounded-md bg-slate-700 text-slate-200 hover:text-white hover:bg-slate-600'>
+        <button
+          className='inline-flex items-center justify-center h-4 p-4 duration-150 rounded-md bg-slate-700 text-slate-200 hover:text-white hover:bg-slate-600'
+          data-cy='sign-up-button'
+        >
           Sign Up
         </button>
       </Dialog.Trigger>
@@ -190,7 +193,7 @@ export const SignUp: React.FC = () => {
         <Dialog.Overlay className='fixed inset-0 bg-black opacity-50' />
         <Dialog.Content className='fixed w-9/12 max-w-lg p-8 -translate-x-1/2 -translate-y-1/2 bg-gray-800 rounded-md shadow-lg top-1/2 left-1/2'>
           <Dialog.Title className='font-semibold select-none'>
-            Sign In
+            Sign Up
           </Dialog.Title>
           <Dialog.Description className='mb-4 text-slate-300'>
             Create an account to start managing your music.
@@ -212,11 +215,12 @@ export const SignUp: React.FC = () => {
                   }}
                   type='email'
                   required
+                  data-cy='sign-up-email-input'
                 />
               </div>
               {emailError && (
                 <div className='w-full text-red-400 text-end'>
-                  <span>{emailError}</span>
+                  <span data-cy='sign-up-email-error'>{emailError}</span>
                 </div>
               )}
             </fieldset>
@@ -234,11 +238,12 @@ export const SignUp: React.FC = () => {
                     onUsernameChange(e);
                   }}
                   required
+                  data-cy='sign-up-username-input'
                 />
               </div>
               {usernameError && (
                 <div className='w-full text-red-400 text-end'>
-                  <span>{usernameError}</span>
+                  <span data-cy='sign-up-username-error'>{usernameError}</span>
                 </div>
               )}
             </fieldset>
@@ -257,11 +262,12 @@ export const SignUp: React.FC = () => {
                     onPasswordChange(e);
                   }}
                   required
+                  data-cy='sign-up-password-input'
                 />
               </div>
               {passwordError && (
                 <div className='w-full text-red-400 text-end'>
-                  <span>{passwordError}</span>
+                  <span data-cy='sign-up-password-error'>{passwordError}</span>
                 </div>
               )}
             </fieldset>
@@ -280,11 +286,14 @@ export const SignUp: React.FC = () => {
                     onConfirmPasswordChange(e);
                   }}
                   required
+                  data-cy='sign-up-confirm-password-input'
                 />
               </div>
               {touchedSignUpFields.confirmPassword && confirmPasswordError && (
                 <div className='w-full text-red-400 text-end'>
-                  <span>{confirmPasswordError}</span>
+                  <span data-cy='sign-up-confirm-password-error'>
+                    {confirmPasswordError}
+                  </span>
                 </div>
               )}
             </fieldset>
@@ -298,10 +307,14 @@ export const SignUp: React.FC = () => {
                 <CircleNotch
                   className='animate-spin animate-fade-in'
                   size={20}
+                  data-cy='sign-up-loading'
                 />
               )}
-              <button className='inline-flex items-center justify-center h-4 p-4 bg-green-600 rounded-md w-28'>
-                Sign In
+              <button
+                className='inline-flex items-center justify-center h-4 p-4 bg-green-600 rounded-md w-28'
+                data-cy='sign-up-submit-button'
+              >
+                Sign Up
               </button>
             </div>
           </form>

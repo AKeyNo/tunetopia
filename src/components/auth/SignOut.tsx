@@ -14,5 +14,9 @@ export const SignOut: React.FC = () => {
     }
   };
 
-  return <AuthButton onClick={() => handleSignOut()}>Sign Out</AuthButton>;
+  return (
+    <AuthButton onClick={() => handleSignOut()} data-cy='sign-out-button'>
+      Sign Out
+    </AuthButton>
+  );
 };
