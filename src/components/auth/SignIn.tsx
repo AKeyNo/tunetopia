@@ -7,6 +7,7 @@ import {
 } from '../../../lib/types/auth';
 import { useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { AuthButton } from './AuthButton';
 
 export const SignIn: React.FC = () => {
   const supabase = useSupabaseClient();
@@ -117,9 +118,7 @@ export const SignIn: React.FC = () => {
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <Dialog.Trigger asChild>
-        <button className='inline-flex items-center justify-center h-4 p-4 duration-150 rounded-md bg-slate-700 text-slate-200 hover:text-white hover:bg-slate-600'>
-          Sign In
-        </button>
+        <AuthButton>Sign In</AuthButton>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className='fixed inset-0 bg-black opacity-50' />

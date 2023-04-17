@@ -1,6 +1,7 @@
 import { useUser } from '@supabase/auth-helpers-react';
 import { SignIn } from '../auth/SignIn';
 import { SignUp } from '../auth/SignUp';
+import { SignOut } from '../auth/SignOut';
 
 export const Header: React.FC<{
   className?: string;
@@ -18,13 +19,13 @@ export const Header: React.FC<{
     >
       {!user ? (
         <>
-          {' '}
           <SignIn />
           <SignUp />
         </>
       ) : (
-        <div>
+        <div className='flex items-center space-x-2'>
           <p>{user.user_metadata.username}</p>
+          <SignOut />
         </div>
       )}
     </header>
