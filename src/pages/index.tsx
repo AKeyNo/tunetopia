@@ -1,4 +1,3 @@
-import { Divider } from '@/components/layout/Divider';
 import * as Separator from '@radix-ui/react-separator';
 import Image from 'next/image';
 
@@ -290,8 +289,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      <Divider />
     </div>
   );
 }
