@@ -6,6 +6,7 @@ create table profile (
   full_name text,
   avatar_url text,
   summary text,
+  image text,
 
   constraint username_length check (char_length(username) >= 3)
 );
@@ -18,7 +19,8 @@ CREATE TABLE artist (
     description TEXT,
     location TEXT,
     year_formed TIMESTAMP,
-    is_solo BOOLEAN
+    is_solo BOOLEAN,
+    image TEXT
 );
 alter table artist enable row level security;
 
