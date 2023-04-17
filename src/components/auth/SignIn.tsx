@@ -8,6 +8,7 @@ import {
 import { useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { AuthButton } from './AuthButton';
+import { EMAIL_REGEX } from '../../../lib/regex/auth';
 
 export const SignIn: React.FC = () => {
   const supabase = useSupabaseClient();
@@ -41,13 +42,14 @@ export const SignIn: React.FC = () => {
 
     if (e.target.value === null || e.target.value === '') {
       emailError = 'Email is required';
-    } else if (!e.target.value.includes('@')) {
+    } else if (!EMAIL_REGEX.test(e.target.value)) {
       emailError = 'Email is invalid';
     }
 
     setSignInErrors({
       ...signInErrors,
       emailError,
+      serverError: null,
     });
   };
 
@@ -64,6 +66,7 @@ export const SignIn: React.FC = () => {
     setSignInErrors({
       ...signInErrors,
       passwordError,
+      serverError: null,
     });
   };
 
@@ -81,6 +84,7 @@ export const SignIn: React.FC = () => {
 
   const signInSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setTouchedSignInFields({
       email: true,
       password: true,
@@ -98,12 +102,24 @@ export const SignIn: React.FC = () => {
 
     try {
       setLoading(true);
+      setSignInErrors({} as SignInErrors);
+
       const { error } = await supabase.auth.signInWithPassword({
         email: signInFields.email!,
         password: signInFields.password!,
       });
 
       if (error) {
+        setSignInFields({ email: '', password: '' });
+        setSignInErrors({
+          ...signInErrors,
+          serverError: error.message,
+        });
+        setTouchedSignInFields({
+          email: false,
+          password: false,
+        });
+
         throw error;
       }
 
@@ -170,6 +186,7 @@ export const SignIn: React.FC = () => {
                     onPasswordChange(e);
                   }}
                   required
+                  data-cy='sign-in-password-input'
                 />
               </div>
               {passwordError && (
@@ -184,6 +201,9 @@ export const SignIn: React.FC = () => {
                   I already have an account
                 </p>
               </Dialog.Close> */}
+              <p className='text-red-400' data-cy='sign-in-server-error'>
+                {signInErrors.serverError}
+              </p>
               {loading && (
                 <CircleNotch
                   className='animate-spin animate-fade-in'

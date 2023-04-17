@@ -25,11 +25,13 @@ export interface SignUpErrors {
     | 'Confirm password is required'
     | 'Passwords do not match'
     | null;
+  serverError: string | null;
 }
 
 export interface SignInErrors {
   emailError: 'Email is required' | 'Email is invalid' | null;
   passwordError: 'Password is required' | 'Password is incorrect' | null;
+  serverError: string | null;
 }
 
 export interface TouchedSignUpFields {

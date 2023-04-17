@@ -7,6 +7,7 @@ import {
 } from '../../../lib/types/auth';
 import { useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { EMAIL_REGEX } from '../../../lib/regex/auth';
 
 export const SignUp: React.FC = () => {
   const supabase = useSupabaseClient();
@@ -45,13 +46,14 @@ export const SignUp: React.FC = () => {
 
     if (e.target.value === null || e.target.value === '') {
       emailError = 'Email is required';
-    } else if (!e.target.value.includes('@')) {
+    } else if (!EMAIL_REGEX.test(e.target.value)) {
       emailError = 'Email is invalid';
     }
 
     setSignUpErrors({
       ...signUpErrors,
       emailError,
+      serverError: null,
     });
   };
 
@@ -68,6 +70,7 @@ export const SignUp: React.FC = () => {
     setSignUpErrors({
       ...signUpErrors,
       usernameError,
+      serverError: null,
     });
   };
 
@@ -97,6 +100,7 @@ export const SignUp: React.FC = () => {
       ...signUpErrors,
       passwordError,
       confirmPasswordError,
+      serverError: null,
     });
   };
 
@@ -117,6 +121,7 @@ export const SignUp: React.FC = () => {
     setSignUpErrors({
       ...signUpErrors,
       confirmPasswordError,
+      serverError: null,
     });
   };
 
@@ -168,6 +173,10 @@ export const SignUp: React.FC = () => {
       });
 
       if (error) {
+        setSignUpErrors({
+          ...signUpErrors,
+          serverError: error.message,
+        });
         throw error;
       }
 
@@ -303,6 +312,9 @@ export const SignUp: React.FC = () => {
                   I don't have an account
                 </p>
               </Dialog.Close> */}
+              <p className='text-red-400' data-cy='sign-up-server-error'>
+                {signUpErrors.serverError}
+              </p>
               {loading && (
                 <CircleNotch
                   className='animate-spin animate-fade-in'

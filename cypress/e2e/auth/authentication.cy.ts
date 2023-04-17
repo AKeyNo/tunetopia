@@ -134,5 +134,40 @@ describe('Authentication', () => {
     cy.get('[data-cy=sign-in-button]').should('exist');
     cy.get('[data-cy=sign-up-button]').should('exist');
     cy.get(`[data-cy=username-${username}]`).should('not.exist');
+    cy.get('[data-cy=sign-in-button]').click();
+
+    // check for the wrong email
+    cy.get('[data-cy=sign-in-email-input]').type(`wrongemail@example.com`);
+    cy.get('[data-cy=sign-in-password-input]').type(password);
+    cy.get('[data-cy=sign-in-submit-button]').click();
+    cy.get('[data-cy=sign-in-loading]');
+    cy.get('[data-cy=sign-in-server-error]').contains(
+      'Invalid login credentials'
+    );
+    cy.get('[data-cy=sign-in-email-input]').should('have.value', '');
+    cy.get('[data-cy=sign-in-password-input]').should('have.value', '');
+
+    // check the with the wrong password
+    cy.get('[data-cy=sign-in-email-input]').type(`${username}@example.com`);
+    cy.get('[data-cy=sign-in-password-input]').type('wrongpassword');
+    cy.get('[data-cy=sign-in-submit-button]').click();
+    cy.get('[data-cy=sign-in-loading]');
+    cy.get('[data-cy=sign-in-server-error]').contains(
+      'Invalid login credentials'
+    );
+    cy.get('[data-cy=sign-in-email-input]').should('have.value', '');
+    cy.get('[data-cy=sign-in-password-input]').should('have.value', '');
+
+    // check for the correct email and password
+    cy.get('[data-cy=sign-in-email-input]').type(`${username}@example.com`);
+    cy.get('[data-cy=sign-in-password-input]').type(password);
+    cy.get('[data-cy=sign-in-submit-button]').click();
+    cy.get('[data-cy=sign-in-loading]');
+    cy.get(`[data-cy=user-username-${username}]`).contains(`${username}`);
+    cy.get('[data-cy=sign-out-button]').click();
+    cy.get('[data-cy=sign-out-button]').should('not.exist');
+    cy.get('[data-cy=sign-in-button]').should('exist');
+    cy.get('[data-cy=sign-up-button]').should('exist');
+    cy.get(`[data-cy=username-${username}]`).should('not.exist');
   });
 });
