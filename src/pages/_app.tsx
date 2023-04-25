@@ -7,6 +7,8 @@ import {
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import type { AppProps } from 'next/app';
 import { useState } from 'react';
+import { Provider } from 'react-redux';
+import { store } from '../../store';
 
 export default function App({
   Component,
@@ -17,13 +19,15 @@ export default function App({
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
 
   return (
-    <SessionContextProvider
-      supabaseClient={supabaseClient}
-      initialSession={pageProps.initialSession}
-    >
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </SessionContextProvider>
+    <Provider store={store}>
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+      >
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </SessionContextProvider>
+    </Provider>
   );
 }

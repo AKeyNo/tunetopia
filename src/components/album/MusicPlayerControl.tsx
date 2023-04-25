@@ -1,4 +1,5 @@
 import {
+  PauseCircle,
   PlayCircle,
   Repeat,
   Shuffle,
@@ -6,8 +7,45 @@ import {
   SkipForward,
 } from '@phosphor-icons/react';
 import * as Slider from '@radix-ui/react-slider';
+import { useAppDispatch, useAppSelector } from '../../../lib/hooks/reduxHooks';
+import { updateIsPlaying } from '../../../lib/slices/currentlyPlayingSlice';
 
 export const MusicPlayerControl: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const isPlaying = useAppSelector((state) => state.currentPlaying.isPlaying);
+
+  const showPlayPauseButton = () => {
+    if (!isPlaying) {
+      return (
+        <button
+          onClick={() => {
+            dispatch(updateIsPlaying(true));
+          }}
+        >
+          <PlayCircle
+            className='duration-200 text-slate-200 hover:text-slate-100'
+            size={48}
+            weight='fill'
+          />
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={() => {
+          dispatch(updateIsPlaying(false));
+        }}
+      >
+        <PauseCircle
+          className='duration-200 text-slate-200 hover:text-slate-100'
+          size={48}
+          weight='fill'
+        />
+      </button>
+    );
+  };
+
   return (
     <div>
       <div className='flex items-center justify-center space-x-5'>
@@ -21,11 +59,7 @@ export const MusicPlayerControl: React.FC = () => {
           size={24}
           weight='fill'
         />
-        <PlayCircle
-          className='duration-200 text-slate-200 hover:text-slate-100'
-          size={48}
-          weight='fill'
-        />
+        {showPlayPauseButton()}
         <SkipForward
           className='duration-200 text-slate-400 hover:text-slate-200'
           size={24}
@@ -45,7 +79,7 @@ export const MusicPlayerControl: React.FC = () => {
             defaultValue={[0]}
             max={100}
             step={1}
-            aria-label='Volume'
+            aria-label='Progress Bar'
           >
             <Slider.Track className='relative flex-grow h-1 rounded-full bg-slate-700'>
               <Slider.Range className='absolute h-full rounded-full bg-slate-300' />
