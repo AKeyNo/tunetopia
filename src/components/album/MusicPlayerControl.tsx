@@ -6,13 +6,35 @@ import {
   SkipBack,
   SkipForward,
 } from '@phosphor-icons/react';
-import * as Slider from '@radix-ui/react-slider';
 import { useAppDispatch, useAppSelector } from '../../../lib/hooks/reduxHooks';
 import { updateIsPlaying } from '../../../lib/slices/currentlyPlayingSlice';
+import { RefObject } from 'react';
+import { Slider } from '../ui/input/Slider';
 
-export const MusicPlayerControl: React.FC = () => {
+export const MusicPlayerControl: React.FC<{
+  changeSongProgress: (timeInSeconds: number) => void;
+  progressBarRef: RefObject<HTMLInputElement>;
+}> = ({ changeSongProgress, progressBarRef }) => {
   const dispatch = useAppDispatch();
   const isPlaying = useAppSelector((state) => state.currentPlaying.isPlaying);
+  const songProgress = useAppSelector(
+    (state) => state.currentPlaying.songProgress
+  );
+  const songDuration = useAppSelector(
+    (state) => state.currentPlaying.songDuration
+  );
+
+  const formatTime = (time: number | null) => {
+    if (!time || isNaN(time)) {
+      return '00:00';
+    }
+
+    const minutes = Math.floor(time / 60);
+    const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const seconds = Math.floor(time % 60);
+    const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${formatMinutes}:${formatSeconds}`;
+  };
 
   const showPlayPauseButton = () => {
     if (!isPlaying) {
@@ -48,7 +70,7 @@ export const MusicPlayerControl: React.FC = () => {
 
   return (
     <div>
-      <div className='flex items-center justify-center space-x-5'>
+      <div className='flex items-center justify-center flex-grow space-x-5'>
         <Shuffle
           className='duration-200 text-slate-400 hover:text-slate-200'
           size={24}
@@ -72,22 +94,29 @@ export const MusicPlayerControl: React.FC = () => {
         />
       </div>
       <div className='flex items-center space-x-2'>
-        <span className='select-none'>1:30</span>
-        <form>
-          <Slider.Root
-            className='relative flex items-center h-2 select-none touch-none w-96'
-            defaultValue={[0]}
-            max={100}
-            step={1}
-            aria-label='Progress Bar'
-          >
-            <Slider.Track className='relative flex-grow h-1 rounded-full bg-slate-700'>
-              <Slider.Range className='absolute h-full rounded-full bg-slate-300' />
-            </Slider.Track>
-            <Slider.Thumb className='block w-[20px] h-[20px] rounded-full bg-white shadow-md border-[10px] hover:bg-slate-100 duration-200 focus:outline-none focus:shadow-sm' />
-          </Slider.Root>
+        <span className='select-none'>{formatTime(songProgress)}</span>
+        <form className='flex items-center'>
+          {/* <input
+            className='h-1 bg-slate-700 w-96'
+            type='range'
+            value={songProgress!}
+            ref={progressBarRef}
+            onChange={(e) => {
+              changeSongProgress(e.target.valueAsNumber);
+            }}
+            max={136}
+          /> */}
+          <Slider
+            className='w-96'
+            value={songProgress!}
+            ref={progressBarRef}
+            onChange={(e) => {
+              changeSongProgress(e.target.valueAsNumber);
+            }}
+            max={136}
+          />
         </form>
-        <span className='select-none'>3:00</span>
+        <span className='select-none'>{formatTime(songDuration)}</span>
       </div>
     </div>
   );

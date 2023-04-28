@@ -6,7 +6,7 @@ export const NowPlaying: React.FC = () => {
   const [isHoveringOverHeart, setIsHoveringOverHeart] = useState(false);
 
   return (
-    <div className='relative flex items-center w-auto h-full gap-x-5'>
+    <div className='relative flex items-center flex-grow w-full h-full gap-x-5'>
       <div className='relative cursor-pointer'>
         <Image
           src='/sample-album-1.jpg'

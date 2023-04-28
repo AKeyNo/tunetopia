@@ -25,3 +25,11 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+input[type='range']::-moz-range-progress {
+  @apply bg-green-500 rounded-full;
+}
+
+input[type='range']::-moz-range-thumb {
+  @apply border-none w-[20px] h-[20px] rounded-full bg-white hover:bg-slate-100 duration-200;
+}

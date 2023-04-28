@@ -6,6 +6,7 @@ export type Song = Database['public']['Tables']['song']['Row'];
 
 export interface CurrentlyPlaying {
   songID: number | null;
+  url: string | null;
   songName: string | null;
   artistName: string | null;
   albumName: string | null;

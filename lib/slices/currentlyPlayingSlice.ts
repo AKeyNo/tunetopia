@@ -3,29 +3,35 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   songID: null,
+  url: null,
   songName: null,
   artistName: null,
   albumName: null,
   albumCover: null,
   songDuration: null,
-  songProgress: null,
+  songProgress: 0,
   isPlaying: false,
   volume: 1,
+  currentlyChangingDuration: false,
 } as CurrentlyPlaying;
 
 export const currentlyPlayingSlice = createSlice({
   name: 'currentlyPlaying',
   initialState,
   reducers: {
+    updateSongProgress: (state, action) => {
+      state.songProgress = action.payload;
+    },
     updateIsPlaying: (state, action) => {
       state.isPlaying = action.payload;
     },
     updateVolume: (state, action) => {
-      state.volume = action.payload / 100;
+      state.volume = action.payload;
     },
   },
 });
 
-export const { updateIsPlaying, updateVolume } = currentlyPlayingSlice.actions;
+export const { updateSongProgress, updateIsPlaying, updateVolume } =
+  currentlyPlayingSlice.actions;
 
 export default currentlyPlayingSlice.reducer;
