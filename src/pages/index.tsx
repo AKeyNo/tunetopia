@@ -6,8 +6,8 @@ export default function Home() {
     <div className='w-full p-4 pt-0 space-y-4 h-max bg-slate-900'>
       <div>
         <Divider
-          header='Jump back in'
-          subheader='The most recent playlists you have listened to.'
+          heading='Jump back in'
+          subheading='The most recent playlists you have listened to.'
         />
         <div className='flex space-x-4'>
           <div>
@@ -54,8 +54,8 @@ export default function Home() {
 
       <div>
         <Divider
-          header='New releases'
-          subheader="New hits that you can't miss."
+          heading='New releases'
+          subheading="New hits that you can't miss."
         />
         <div className='flex w-full gap-x-4'>
           <div className='w-1/5'>
@@ -135,8 +135,8 @@ export default function Home() {
 
       <div>
         <Divider
-          header='Recommended for you'
-          subheader='Top album picks for you.'
+          heading='Recommended for you'
+          subheading='Top album picks for you.'
         />
         <div className='flex pb-4 space-x-4 overflow-x-auto'>
           <div>
