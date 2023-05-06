@@ -23,6 +23,10 @@ CREATE TABLE artist (
     image TEXT
 );
 alter table artist enable row level security;
+CREATE POLICY "Enable read access for all users" ON "public"."artist"
+AS PERMISSIVE FOR SELECT
+TO public
+USING (true)
 
 -- Song table
 CREATE TABLE song (
@@ -32,6 +36,10 @@ CREATE TABLE song (
     FOREIGN KEY (artist_id) REFERENCES artist (artist_id)
 );
 alter table song enable row level security;
+CREATE POLICY "Enable read access for all users" ON "public"."song"
+AS PERMISSIVE FOR SELECT
+TO public
+USING (true)
 
 -- Album table
 CREATE TABLE album (
@@ -42,6 +50,10 @@ CREATE TABLE album (
     genre TEXT
 );
 alter table album enable row level security;
+CREATE POLICY "Enable read access for all users" ON "public"."album"
+AS PERMISSIVE FOR SELECT
+TO public
+USING (true)
 
 -- AlbumArtist junction table
 CREATE TABLE album_artist (
@@ -52,6 +64,10 @@ CREATE TABLE album_artist (
     FOREIGN KEY (artist_id) REFERENCES artist (artist_id)
 );
 alter table album_artist enable row level security;
+CREATE POLICY "Enable read access for all users" ON "public"."album_artist"
+AS PERMISSIVE FOR SELECT
+TO public
+USING (true)
 
 -- This trigger automatically creates a profile entry when a new user signs up via Supabase Auth.
 create function public.handle_new_user()
