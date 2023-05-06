@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className='w-full p-4 pt-0 space-y-4 h-max bg-slate-900'>
+    <div className='w-full space-y-4 h-max bg-slate-900'>
       <div>
         <Divider
           heading='Jump back in'

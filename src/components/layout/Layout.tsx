@@ -35,7 +35,7 @@ export const Layout: React.FC<PropsWithChildren<any>> = ({ children }) => {
         ref={childrenRef}
       >
         <Header scrollPosition={scrollPosition} />
-        {children}
+        <div className='p-4 pt-0'>{children}</div>
       </div>
       <PlayBar className='col-span-2 row-span-1' />
     </div>
