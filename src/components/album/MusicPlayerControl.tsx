@@ -96,16 +96,6 @@ export const MusicPlayerControl: React.FC<{
       <div className='flex items-center space-x-2'>
         <span className='select-none'>{formatTime(songProgress)}</span>
         <form className='flex items-center'>
-          {/* <input
-            className='h-1 bg-slate-700 w-96'
-            type='range'
-            value={songProgress!}
-            ref={progressBarRef}
-            onChange={(e) => {
-              changeSongProgress(e.target.valueAsNumber);
-            }}
-            max={136}
-          /> */}
           <Slider
             className='w-96'
             value={songProgress!}

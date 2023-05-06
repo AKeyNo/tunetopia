@@ -15,4 +15,5 @@ export interface CurrentlyPlaying {
   songProgress: number | null;
   isPlaying: boolean;
   volume: number;
+  status: 'idle' | 'loading' | 'failed';
 }

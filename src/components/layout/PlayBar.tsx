@@ -3,7 +3,10 @@ import { NowPlaying } from '../album/NowPlaying';
 import { MusicPlayerControl } from '../album/MusicPlayerControl';
 import { SoundControl } from '../album/SoundControl';
 import { useAppDispatch, useAppSelector } from '../../../lib/hooks/reduxHooks';
-import { updateSongProgress } from '../../../lib/slices/currentlyPlayingSlice';
+import {
+  updateSongDuration,
+  updateSongProgress,
+} from '../../../lib/slices/currentlyPlayingSlice';
 
 export const PlayBar: React.FC<{ className: string }> = ({ className }) => {
   const dispatch = useAppDispatch();
@@ -24,14 +27,18 @@ export const PlayBar: React.FC<{ className: string }> = ({ className }) => {
       return;
     }
 
+    if (!currentlyPlaying.songDuration) {
+      dispatch(updateSongDuration(audioRef.current?.duration || 0));
+    }
+
     dispatch(updateSongProgress(audioRef.current.currentTime));
     progressBarRef.current.value = audioRef.current.currentTime.toString();
 
     playAnimationRef.current = requestAnimationFrame(drawProgress);
-  }, [dispatch]);
+  }, [dispatch, currentlyPlaying.songDuration]);
 
   useEffect(() => {
-    if (!audioRef.current) {
+    if (!audioRef.current || !currentlyPlaying.url) {
       return;
     }
 
@@ -42,7 +49,12 @@ export const PlayBar: React.FC<{ className: string }> = ({ className }) => {
     }
 
     playAnimationRef.current = requestAnimationFrame(drawProgress);
-  }, [audioRef, currentlyPlaying.isPlaying, drawProgress]);
+  }, [
+    audioRef,
+    currentlyPlaying.isPlaying,
+    currentlyPlaying.url,
+    drawProgress,
+  ]);
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -59,7 +71,9 @@ export const PlayBar: React.FC<{ className: string }> = ({ className }) => {
         `${' '}${className}`
       }
     >
-      <audio src='Hurt - Rangga Fermata.mp3' ref={audioRef} />
+      {currentlyPlaying.status == 'idle' && (
+        <audio src={currentlyPlaying.url!} ref={audioRef} />
+      )}
       <NowPlaying />
       <MusicPlayerControl
         changeSongProgress={changeSongProgress}

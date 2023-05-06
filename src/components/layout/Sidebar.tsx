@@ -1,6 +1,9 @@
+import { useRouter } from 'next/router';
 import { SidebarButton } from '../buttons/SidebarButton';
 
 export const Sidebar: React.FC<{ className: string }> = ({ className }) => {
+  const router = useRouter();
+
   return (
     <aside
       className={
@@ -10,8 +13,10 @@ export const Sidebar: React.FC<{ className: string }> = ({ className }) => {
     >
       <h1 className='text-xl font-bold select-none'>TuneTopia</h1>
       <ul className='space-y-2'>
-        <SidebarButton>Home</SidebarButton>
-        <SidebarButton>Search</SidebarButton>
+        <SidebarButton onClick={() => router.push('/')}>Home</SidebarButton>
+        <SidebarButton onClick={() => router.push('/search')}>
+          Search
+        </SidebarButton>
         <SidebarButton>Library</SidebarButton>
         <SidebarButton>Upload</SidebarButton>
         <SidebarButton>Create a Playlist</SidebarButton>
