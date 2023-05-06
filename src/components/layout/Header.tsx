@@ -12,7 +12,7 @@ export const Header: React.FC<{
   return (
     <header
       className={
-        'flex justify-end p-4 space-x-2 items-center sticky h-20 w-full z-50 top-0 duration-300' +
+        'flex justify-end p-4 space-x-2 items-center sticky h-16 w-full z-50 top-0 duration-300' +
         `${' '}${scrollPosition > 50 && 'bg-black bg-opacity-90'}` +
         `${' '}${className}`
       }
