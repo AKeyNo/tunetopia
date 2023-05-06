@@ -1,18 +1,13 @@
-import * as Separator from '@radix-ui/react-separator';
+import { Divider } from '@/components/layout/Divider';
 import Image from 'next/image';
 
 export default function Home() {
   return (
     <div className='w-full p-4 pt-0 space-y-4 h-max bg-slate-900'>
       <div>
-        <h1 className='text-3xl font-bold select-none'>Jump back in</h1>
-        <h2 className='select-none text-slate-300'>
-          The most recent playlists you have listened to.
-        </h2>
-        <Separator.Root
-          className='h-[1px] my-4 bg-slate-700'
-          decorative
-          orientation='vertical'
+        <Divider
+          header='Jump back in'
+          subheader='The most recent playlists you have listened to.'
         />
         <div className='flex space-x-4'>
           <div>
@@ -58,16 +53,10 @@ export default function Home() {
       </div>
 
       <div>
-        <h1 className='text-3xl font-bold select-none'>New releases</h1>
-        <h2 className='select-none text-slate-300'>
-          New hits that you can&apos;t miss.
-        </h2>
-        <Separator.Root
-          className='h-[1px] my-4 bg-slate-700'
-          decorative
-          orientation='vertical'
+        <Divider
+          header='New releases'
+          subheader="New hits that you can't miss."
         />
-
         <div className='flex w-full gap-x-4'>
           <div className='w-1/5'>
             <div className='relative flex overflow-hidden h-96'>
@@ -145,12 +134,9 @@ export default function Home() {
       </div>
 
       <div>
-        <h1 className='text-3xl font-bold select-none'>Recommended for you</h1>
-        <h2 className='select-none text-slate-300'>Top album picks for you.</h2>
-        <Separator.Root
-          className='h-[1px] my-4 bg-slate-700'
-          decorative
-          orientation='vertical'
+        <Divider
+          header='Recommended for you'
+          subheader='Top album picks for you.'
         />
         <div className='flex pb-4 space-x-4 overflow-x-auto'>
           <div>
