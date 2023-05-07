@@ -4,11 +4,10 @@ import Image from 'next/image';
 export default function Home() {
   return (
     <div className='w-full space-y-4 h-max bg-slate-900'>
-      <div>
-        <Divider
-          heading='Jump back in'
-          subheading='The most recent playlists you have listened to.'
-        />
+      <Divider
+        heading='Jump back in'
+        subheading='The most recent playlists you have listened to.'
+      >
         <div className='flex space-x-4'>
           <div>
             <div className='relative flex overflow-hidden w-44 h-44'>
@@ -50,13 +49,12 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </Divider>
 
-      <div>
-        <Divider
-          heading='New releases'
-          subheading="New hits that you can't miss."
-        />
+      <Divider
+        heading='New releases'
+        subheading="New hits that you can't miss."
+      >
         <div className='flex w-full gap-x-4'>
           <div className='w-1/5'>
             <div className='relative flex overflow-hidden h-96'>
@@ -131,14 +129,13 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </Divider>
 
-      <div>
-        <Divider
-          heading='Recommended for you'
-          subheading='Top album picks for you.'
-        />
-        <div className='flex pb-4 space-x-4 overflow-x-auto'>
+      <Divider
+        heading='Recommended for you'
+        subheading='Top album picks for you.'
+      >
+        <div className='flex space-x-4 overflow-x-auto'>
           <div>
             <div className='relative flex overflow-hidden w-44 h-44'>
               <Image
@@ -274,7 +271,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </Divider>
     </div>
   );
 }
