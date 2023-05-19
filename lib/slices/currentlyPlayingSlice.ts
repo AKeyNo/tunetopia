@@ -2,18 +2,26 @@ import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { CurrentlyPlaying } from '../types/music';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Database } from '../types/supabase';
+import { Song } from '../types/music';
 
 const supabase = createBrowserSupabaseClient<Database>();
 
 const initialState = {
-  songID: null,
-  url: null,
-  songName: null,
-  artistName: null,
-  albumName: null,
-  albumCover: null,
-  songDuration: null,
-  songProgress: 0,
+  currentSong: {
+    id: null,
+    artistID: null,
+    albumID: null,
+    name: null,
+    artistName: null,
+    albumName: null,
+    duration: null,
+    url: null,
+    albumCover: null,
+    createdAt: null,
+    updatedAt: null,
+  } as Song,
+  playlist: [] as Song[],
+  songProgress: null,
   isPlaying: false,
   volume: 1,
   currentlyChangingDuration: false,
@@ -51,7 +59,7 @@ export const currentlyPlayingSlice = createSlice({
   initialState,
   reducers: {
     updateSongDuration: (state, action) => {
-      state.songDuration = action.payload;
+      state.currentSong.duration = action.payload;
     },
     updateSongProgress: (state, action) => {
       state.songProgress = action.payload;
@@ -69,9 +77,9 @@ export const currentlyPlayingSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(updateSong.fulfilled, (state, action) => {
-        state.songID = Number(action.payload.songID);
+        state.currentSong.id = Number(action.payload.songID);
 
-        state.songName = action.payload.songData?.name;
+        state.currentSong.name = action.payload.songData?.name;
 
         // if songData.artist is an array, combine all the names into one string, if not, just use the name
         const artistName = Array.isArray(action.payload.songData.artist)
@@ -80,13 +88,13 @@ export const currentlyPlayingSlice = createSlice({
               .join(', ')
           : action.payload.songData.artist?.name;
 
-        state.artistName = artistName!;
-        state.albumCover = action.payload.albumCoverURL;
+        state.currentSong.artistName = artistName!;
+        state.currentSong.albumCover = action.payload.albumCoverURL;
 
-        state.url = action.payload.songURL;
+        state.currentSong.url = action.payload.songURL;
 
         // set to 0 because this gets updated by the audio player
-        state.songDuration = 0;
+        state.currentSong.duration = 0;
 
         state.status = 'idle';
       })

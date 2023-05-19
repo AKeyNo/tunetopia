@@ -1,28 +1,62 @@
-import { useState } from 'react';
-import { useAppDispatch } from '../../../lib/hooks/reduxHooks';
-import { updateSong } from '../../../lib/slices/currentlyPlayingSlice';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../lib/hooks/reduxHooks';
+import { Divider } from '@/components/layout/Divider';
+import { SearchInput } from '@/components/ui/input/SearchInput';
+import { useRouter } from 'next/router';
+import {
+  clearResults,
+  searchSongs,
+} from '../../../lib/slices/searchResultsSlice';
+import { SongCard } from '@/components/album/SongCard';
 
 export default function Search() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
+  const songResults = useAppSelector(
+    (state) => state.searchResults.songResults
+  );
 
   const [inputSongID, setInputSongID] = useState<string>('');
 
-  const playSongID = (e: any) => {
-    e.preventDefault();
+  console.log(router);
 
-    dispatch(updateSong(inputSongID));
-  };
+  useEffect(() => {
+    if (inputSongID === router.query.q) {
+      return;
+    }
+
+    if (inputSongID === '' && router.query.q === undefined) {
+      dispatch(clearResults());
+      return;
+    }
+
+    const delayDebounce = setTimeout(() => {
+      if (inputSongID.length === 0 && router.query.q !== '') {
+        return router.replace({ pathname: '/search' });
+      }
+
+      router.replace({ pathname: '/search', query: { q: inputSongID } });
+      dispatch(searchSongs(inputSongID));
+      // dispatch(updateSong(inputSongID));
+    }, 1000);
+
+    return () => clearTimeout(delayDebounce);
+  }, [inputSongID, dispatch, router]);
+
+  const songList = songResults.map((song) => {
+    return <SongCard key={song.id} song={song} />;
+  });
 
   return (
     <div>
-      <form onSubmit={(e) => playSongID(e)}>
-        <input
-          className='w-20 text-black'
-          type='text'
-          onChange={(e) => setInputSongID(e.target.value)}
-        />
-        <button className='p-4 border-2 w-36'>Search</button>
-      </form>
+      <Divider heading='Search' subheading='What do you want to listen to?' />
+      <SearchInput onChange={setInputSongID} />
+
+      <div className='flex flex-col'>
+        <Divider heading='Songs' />
+        {songList}
+        {/* <Divider heading='Artists' /> */}
+      </div>
     </div>
   );
 }

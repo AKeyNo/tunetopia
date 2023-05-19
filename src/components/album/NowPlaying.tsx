@@ -1,14 +1,17 @@
-import { Heart } from '@phosphor-icons/react';
 import Image from 'next/image';
-import { useState } from 'react';
 import { useAppSelector } from '../../../lib/hooks/reduxHooks';
+import { HeartButton } from '../buttons/HeartButton';
 
 export const NowPlaying: React.FC = () => {
-  const albumCover = useAppSelector((state) => state.currentPlaying.albumCover);
-  const songName = useAppSelector((state) => state.currentPlaying.songName);
-  const artistName = useAppSelector((state) => state.currentPlaying.artistName);
-
-  const [isHoveringOverHeart, setIsHoveringOverHeart] = useState(false);
+  const albumCover = useAppSelector(
+    (state) => state.currentPlaying.currentSong.albumCover
+  );
+  const songName = useAppSelector(
+    (state) => state.currentPlaying.currentSong.name
+  );
+  const artistName = useAppSelector(
+    (state) => state.currentPlaying.currentSong.artistName
+  );
 
   return (
     <div className='relative flex items-center flex-grow w-full h-full gap-x-5'>
@@ -28,14 +31,7 @@ export const NowPlaying: React.FC = () => {
           {artistName}
         </div>
       </div>
-
-      <Heart
-        size={20}
-        weight={isHoveringOverHeart ? 'regular' : 'light'}
-        className='text-gray-400 duration-200'
-        onMouseEnter={() => setIsHoveringOverHeart(true)}
-        onMouseLeave={() => setIsHoveringOverHeart(false)}
-      />
+      <HeartButton />
     </div>
   );
 };

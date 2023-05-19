@@ -27,7 +27,7 @@ export const PlayBar: React.FC<{ className: string }> = ({ className }) => {
       return;
     }
 
-    if (!currentlyPlaying.songDuration) {
+    if (!currentlyPlaying.currentSong.duration) {
       dispatch(updateSongDuration(audioRef.current?.duration || 0));
     }
 
@@ -35,10 +35,10 @@ export const PlayBar: React.FC<{ className: string }> = ({ className }) => {
     progressBarRef.current.value = audioRef.current.currentTime.toString();
 
     playAnimationRef.current = requestAnimationFrame(drawProgress);
-  }, [dispatch, currentlyPlaying.songDuration]);
+  }, [dispatch, currentlyPlaying.currentSong.duration]);
 
   useEffect(() => {
-    if (!audioRef.current || !currentlyPlaying.url) {
+    if (!audioRef.current || !currentlyPlaying.currentSong.url) {
       return;
     }
 
@@ -52,7 +52,7 @@ export const PlayBar: React.FC<{ className: string }> = ({ className }) => {
   }, [
     audioRef,
     currentlyPlaying.isPlaying,
-    currentlyPlaying.url,
+    currentlyPlaying.currentSong.url,
     drawProgress,
   ]);
 
@@ -72,7 +72,7 @@ export const PlayBar: React.FC<{ className: string }> = ({ className }) => {
       }
     >
       {currentlyPlaying.status == 'idle' && (
-        <audio src={currentlyPlaying.url!} ref={audioRef} />
+        <audio src={currentlyPlaying.currentSong.url!} ref={audioRef} />
       )}
       <NowPlaying />
       <MusicPlayerControl

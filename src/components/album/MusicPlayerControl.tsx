@@ -21,7 +21,7 @@ export const MusicPlayerControl: React.FC<{
     (state) => state.currentPlaying.songProgress
   );
   const songDuration = useAppSelector(
-    (state) => state.currentPlaying.songDuration
+    (state) => state.currentPlaying.currentSong.duration
   );
 
   const formatTime = (time: number | null) => {
