@@ -49,12 +49,12 @@ export default function Search() {
 
   return (
     <div>
-      <Divider heading='Search' subheading='What do you want to listen to?' />
-      <SearchInput onChange={setInputSongID} />
+      <Divider heading='Search' subheading='What do you want to listen to?'>
+        <SearchInput onChange={setInputSongID} />
+      </Divider>
 
       <div className='flex flex-col'>
-        <Divider heading='Songs' />
-        {songList}
+        <Divider heading='Songs'>{songList}</Divider>
         {/* <Divider heading='Artists' /> */}
       </div>
     </div>
