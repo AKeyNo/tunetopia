@@ -106,16 +106,19 @@ export interface Database {
       };
       song: {
         Row: {
+          album_id: number;
           artist_id: number;
           name: string;
           song_id: number;
         };
         Insert: {
+          album_id: number;
           artist_id: number;
           name: string;
           song_id?: number;
         };
         Update: {
+          album_id?: number;
           artist_id?: number;
           name?: string;
           song_id?: number;
