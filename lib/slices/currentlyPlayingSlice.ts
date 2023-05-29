@@ -41,6 +41,7 @@ export const updateSong = createAsyncThunk(
     const { data: songData } = await supabase
       .from('song')
       .select('*, artist(name)')
+      .eq('song_id', songID)
       .maybeSingle();
 
     if (!songURL || !songData) throw new Error('Song not found');
