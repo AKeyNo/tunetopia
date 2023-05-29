@@ -15,12 +15,12 @@ export const NowPlaying: React.FC = () => {
 
   return (
     <div className='relative flex items-center flex-grow w-full h-full gap-x-5'>
-      <div className='relative cursor-pointer'>
+      <div className='relative w-20 h-20 cursor-pointer'>
         <Image
+          className='object-cover'
           src={albumCover || '/sample-album-2.jpg'}
           alt='album-cover'
-          height='75'
-          width='75'
+          fill
         />
       </div>
       <div className='flex flex-col justify-center'>

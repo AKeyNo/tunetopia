@@ -79,6 +79,7 @@ export default function AlbumPage() {
       />
       <div className='relative z-10 w-64 h-64'>
         <Image
+          className='object-cover'
           src={album?.image ?? ''}
           alt={`${album?.name}'s album cover`}
           fill
