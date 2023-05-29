@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import currentlyPlayingSlice from './lib/slices/currentlyPlayingSlice';
 import searchResultsSlice from './lib/slices/searchResultsSlice';
+import albumSlice from './lib/slices/albumSlice';
 
 export const store = configureStore({
   reducer: {
     currentPlaying: currentlyPlayingSlice,
     searchResults: searchResultsSlice,
+    album: albumSlice,
   },
 });
 

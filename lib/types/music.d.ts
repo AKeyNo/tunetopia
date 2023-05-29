@@ -1,9 +1,15 @@
 import { Database } from './supabase';
 
-export type Album = Database['public']['Tables']['album']['Row'];
 export type AlbumArtist = Database['public']['Tables']['album_artist']['Row'];
 export type Artist = Database['public']['Tables']['artist']['Row'];
 export type Playlist = Database['public']['Tables']['playlist']['Row'];
+
+export type Album = Database['public']['Tables']['album']['Row'] & {
+  artists:
+    | { artist_id: number; name: string }
+    | { artist_id: number; name: string }[]
+    | null;
+};
 
 export interface Song {
   id: number | null;
@@ -33,5 +39,11 @@ export interface SearchResults {
   // artists: Artist[];
   // albums: Album[];
   // playlists: Playlist[];
+  status: 'idle' | 'loading' | 'failed';
+}
+
+export interface AlbumState {
+  album: Album | null;
+  songs: Song[];
   status: 'idle' | 'loading' | 'failed';
 }

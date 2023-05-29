@@ -29,7 +29,7 @@ export const Layout: React.FC<PropsWithChildren<any>> = ({ children }) => {
 
   return (
     <div className='grid w-screen h-screen grid-cols-[300px_auto] grid-rows-[auto_100px]'>
-      <Sidebar className='col-span-1 row-span-1' />
+      <Sidebar className='z-50 col-span-1 row-span-1' />
       <div
         className='flex flex-col h-full col-span-1 row-span-1 overflow-y-auto bg-slate-900'
         ref={childrenRef}
@@ -37,7 +37,7 @@ export const Layout: React.FC<PropsWithChildren<any>> = ({ children }) => {
         <Header scrollPosition={scrollPosition} />
         <div className='p-4 pt-0'>{children}</div>
       </div>
-      <PlayBar className='col-span-2 row-span-1' />
+      <PlayBar className='z-50 col-span-2 row-span-1' />
     </div>
   );
 };

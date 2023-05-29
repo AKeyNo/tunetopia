@@ -6,6 +6,7 @@ import { updateSong } from '../../../lib/slices/currentlyPlayingSlice';
 import { updateIsPlaying } from '../../../lib/slices/currentlyPlayingSlice';
 import { HeartButton } from '../buttons/HeartButton';
 import { Pause, Play } from '@phosphor-icons/react';
+import Link from 'next/link';
 
 export const SongCard: React.FC<{ song: Song }> = ({ song }) => {
   const dispatch = useAppDispatch();
@@ -66,13 +67,17 @@ export const SongCard: React.FC<{ song: Song }> = ({ song }) => {
         />
       </div>
       <div className='pt-4 font-semibold cursor-pointer hover:underline text-slate-100 hover:text-white underline-offset-2'>
-        {song.name}
+        <Link href={`/album/${song.albumID}`} replace>
+          {song.name}
+        </Link>
       </div>
       <div className='flex justify-end w-full row-span-2 pr-4'>
         <HeartButton size={24} />
       </div>
       <div className='pb-4 text-sm duration-200 cursor-pointer hover:underline text-slate-300 hover:text-white underline-offset-2'>
-        {song.artistName}
+        <Link href={`/artist/${song.artistID}`} replace>
+          {song.artistName}
+        </Link>
       </div>
     </div>
   );

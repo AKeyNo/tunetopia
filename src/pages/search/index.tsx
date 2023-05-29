@@ -18,8 +18,6 @@ export default function Search() {
 
   const [inputSongID, setInputSongID] = useState<string>('');
 
-  console.log(router);
-
   useEffect(() => {
     if (inputSongID === router.query.q) {
       return;
@@ -37,7 +35,6 @@ export default function Search() {
 
       router.replace({ pathname: '/search', query: { q: inputSongID } });
       dispatch(searchSongs(inputSongID));
-      // dispatch(updateSong(inputSongID));
     }, 1000);
 
     return () => clearTimeout(delayDebounce);

@@ -49,19 +49,25 @@ export const searchResultsSlice = createSlice({
             ? song?.artist.map((artist) => artist.name).join(', ')
             : song?.artist?.name;
 
+          const {
+            song_id: id,
+            artist_id: artistID,
+            name,
+            album_id: albumID,
+          } = song;
+
           return {
-            id: song.song_id as unknown as number,
-            artistID: song.artist_id as unknown as number,
-            name: song.name as unknown as string,
-            artistName: artistName,
+            id,
+            artistID,
+            name,
+            artistName,
             albumName: null,
-            albumID: null,
+            albumID,
             duration: null,
             url: null,
             albumCover:
-              supabase.storage
-                .from('album_covers')
-                .getPublicUrl(song.song_id.toString()).data?.publicUrl + '.jpg',
+              supabase.storage.from('album_covers').getPublicUrl(id.toString())
+                ?.data?.publicUrl + '.jpg',
             createdAt: null,
             updatedAt: null,
           } as Song;
