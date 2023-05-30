@@ -1,37 +1,70 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      signUpCustom(username: string, password: string): Chainable<void>;
+      signInCustom(username: string, password: string): Chainable<void>;
+      signOut(): Chainable<void>;
+    }
+  }
+}
+
+Cypress.Commands.add('signUpCustom', (username: string, password: string) => {
+  // check to see if the sign out button isn't there and that the sign in and sign up buttons are there
+  cy.get('[data-cy=sign-out-button]').should('not.exist');
+  cy.get('[data-cy=sign-in-button]').should('exist');
+  cy.get('[data-cy=sign-up-button]').should('exist');
+  cy.get(`[data-cy=username-${username}]`).should('not.exist');
+
+  cy.get('[data-cy=sign-up-email-error]').should('not.exist');
+  cy.get('[data-cy=sign-up-username-error]').should('not.exist');
+  cy.get('[data-cy=sign-up-password-error]').should('not.exist');
+  cy.get('[data-cy=sign-up-confirm-password-error]').should('not.exist');
+
+  // enter valid data into the sign up form
+  cy.get('[data-cy=sign-up-button]').click();
+  cy.get('[data-cy=sign-up-email-input]')
+    .should('have.value', '')
+    .type(`${username}@example.com`);
+  cy.get('[data-cy=sign-up-username-input]')
+    .should('have.value', '')
+    .type(username);
+  cy.get('[data-cy=sign-up-password-input]')
+    .should('have.value', '')
+    .type(password);
+  cy.get('[data-cy=sign-up-confirm-password-input]')
+    .should('have.value', '')
+    .type(password);
+
+  // make sure errors for each field are not there
+  cy.get('[data-cy=sign-up-email-error]').should('not.exist');
+  cy.get('[data-cy=sign-up-username-error]').should('not.exist');
+  cy.get('[data-cy=sign-up-password-error]').should('not.exist');
+  cy.get('[data-cy=sign-up-confirm-password-error]').should('not.exist');
+
+  // submit the form
+  cy.get('[data-cy=sign-up-submit-button]').click();
+  cy.get('[data-cy=sign-up-loading]');
+  cy.get(`[data-cy=user-username-${username}]`)
+    .should('exist')
+    .contains(`${username}`);
+});
+
+Cypress.Commands.add('signInCustom', (username: string, password: string) => {
+  cy.get('[data-cy="sign-in-button"]').click();
+  cy.get('[data-cy="sign-in-email-input"]').type(`${username}@example.com`);
+  cy.get('[data-cy="sign-in-password-input"]').type(password);
+  cy.get('[data-cy="sign-in-submit-button"]').click();
+  cy.get(`[data-cy=user-username-${username}]`)
+    .should('exist')
+    .contains(`${username}`);
+});
+
+Cypress.Commands.add('signOut', () => {
+  cy.get('[data-cy=sign-out-button]').click();
+  cy.get('[data-cy=sign-out-button]').should('not.exist');
+  cy.get('[data-cy=sign-in-button]').should('exist');
+  cy.get('[data-cy=sign-up-button]').should('exist');
+});
+
+export {};
