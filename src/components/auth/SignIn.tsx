@@ -137,8 +137,8 @@ export const SignIn: React.FC = () => {
         <AuthButton data-cy='sign-in-button'>Sign In</AuthButton>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className='fixed inset-0 bg-black opacity-50' />
-        <Dialog.Content className='fixed w-9/12 max-w-lg p-8 -translate-x-1/2 -translate-y-1/2 bg-gray-800 rounded-md shadow-lg top-1/2 left-1/2'>
+        <Dialog.Overlay className='fixed inset-0 bg-black opacity-50 z-[99]' />
+        <Dialog.Content className='fixed w-9/12 max-w-lg p-8 -translate-x-1/2 -translate-y-1/2 bg-gray-800 rounded-md shadow-lg top-1/2 left-1/2 z-[100]'>
           <Dialog.Title className='font-semibold select-none'>
             Sign In
           </Dialog.Title>
