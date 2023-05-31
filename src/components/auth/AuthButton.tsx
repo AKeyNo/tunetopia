@@ -1,10 +1,12 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, forwardRef } from 'react';
 
-export const AuthButton: React.FC<
+const AuthButton = forwardRef<
+  HTMLButtonElement,
   PropsWithChildren<{ onClick?: () => Promise<void>; 'data-cy'?: string }>
-> = ({ children, onClick, 'data-cy': dataCy }) => {
+>(function AuthButton({ children, onClick, 'data-cy': dataCy }, ref) {
   return (
     <button
+      ref={ref}
       className='inline-flex items-center justify-center h-4 p-4 duration-150 rounded-md bg-slate-700 text-slate-200 hover:text-white hover:bg-slate-600'
       onClick={onClick}
       data-cy={dataCy}
@@ -12,4 +14,8 @@ export const AuthButton: React.FC<
       {children}
     </button>
   );
-};
+});
+
+AuthButton.displayName = 'AuthButton';
+
+export default AuthButton;

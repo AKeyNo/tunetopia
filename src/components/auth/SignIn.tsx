@@ -7,7 +7,7 @@ import {
 } from '../../../lib/types/auth';
 import { useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { AuthButton } from './AuthButton';
+import AuthButton from './AuthButton';
 import { EMAIL_REGEX } from '../../../lib/regex/auth';
 
 export const SignIn: React.FC = () => {
