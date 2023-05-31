@@ -24,10 +24,16 @@ export const NowPlaying: React.FC = () => {
         />
       </div>
       <div className='flex flex-col justify-center'>
-        <div className='font-semibold cursor-pointer hover:underline text-slate-100 hover:text-white underline-offset-2'>
+        <div
+          className='font-semibold cursor-pointer hover:underline text-slate-100 hover:text-white underline-offset-2'
+          data-cy='now-playing-song-name'
+        >
           {songName || 'Song Name'}
         </div>
-        <div className='text-sm duration-200 cursor-pointer hover:underline text-slate-300 hover:text-white underline-offset-2'>
+        <div
+          className='text-sm duration-200 cursor-pointer hover:underline text-slate-300 hover:text-white underline-offset-2'
+          data-cy='now-playing-artist-name'
+        >
           {artistName}
         </div>
       </div>

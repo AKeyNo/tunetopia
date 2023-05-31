@@ -47,7 +47,7 @@ export default function Search() {
   return (
     <div>
       <Divider heading='Search' subheading='What do you want to listen to?'>
-        <SearchInput onChange={setInputSongID} />
+        <SearchInput onChange={setInputSongID} data-cy='search-page-input' />
       </Divider>
 
       <div className='flex flex-col'>

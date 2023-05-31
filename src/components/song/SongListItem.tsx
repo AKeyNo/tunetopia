@@ -45,6 +45,7 @@ export const SongListItem: React.FC<{ song: Song; listNumber: number }> = ({
 
             return dispatch(updateIsPlaying(true));
           }}
+          data-cy={`song-list-item-album-number-${song.id}`}
         >
           {listNumber}
         </div>

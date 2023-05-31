@@ -13,13 +13,23 @@ export const Sidebar: React.FC<{ className: string }> = ({ className }) => {
     >
       <h1 className='text-xl font-bold select-none'>TuneTopia</h1>
       <ul className='space-y-2'>
-        <SidebarButton onClick={() => router.push('/')}>Home</SidebarButton>
-        <SidebarButton onClick={() => router.push('/search')}>
+        <SidebarButton
+          onClick={() => router.push('/')}
+          data-cy='sidebar-button-home'
+        >
+          Home
+        </SidebarButton>
+        <SidebarButton
+          onClick={() => router.push('/search')}
+          data-cy='sidebar-button-search'
+        >
           Search
         </SidebarButton>
-        <SidebarButton>Library</SidebarButton>
-        <SidebarButton>Upload</SidebarButton>
-        <SidebarButton>Create a Playlist</SidebarButton>
+        <SidebarButton data-cy='sidebar-button-library'>Library</SidebarButton>
+        <SidebarButton data-cy='sidebar-button-upload'>Upload</SidebarButton>
+        <SidebarButton data-cy='sidebar-button-create-a-playlist'>
+          Create a Playlist
+        </SidebarButton>
       </ul>
       <h2 className='text-lg font-semibold select-none'>Playlists</h2>
       <ul

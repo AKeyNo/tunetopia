@@ -25,11 +25,15 @@ export const SongCard: React.FC<{ song: Song }> = ({ song }) => {
     currentlyPlayingSongID !== song.id;
 
   return (
-    <div className='grid items-center h-20 grid-cols-[5rem_auto_auto] grid-rows-2 w-96 hover:bg-slate-800 b-4 gap-x-4 duration-75'>
+    <div
+      className='grid items-center h-20 grid-cols-[5rem_auto_auto] grid-rows-2 w-96 hover:bg-slate-800 b-4 gap-x-4 duration-75'
+      data-cy={`song-card-${song.id}`}
+    >
       <div
         className='relative w-full h-full row-span-2'
         onMouseEnter={() => setIsHoveringOverAlbumCover(true)}
         onMouseLeave={() => setIsHoveringOverAlbumCover(false)}
+        data-cy={`song-card-album-cover-${song.id}`}
       >
         <Image
           className='object-cover duration-75 hover:opacity-50'
@@ -67,7 +71,11 @@ export const SongCard: React.FC<{ song: Song }> = ({ song }) => {
         />
       </div>
       <div className='pt-4 font-semibold cursor-pointer hover:underline text-slate-100 hover:text-white underline-offset-2'>
-        <Link href={`/album/${song.albumID}`} replace>
+        <Link
+          href={`/album/${song.albumID}`}
+          replace
+          data-cy={`song-card-song-name-${song.id}`}
+        >
           {song.name}
         </Link>
       </div>
@@ -75,7 +83,11 @@ export const SongCard: React.FC<{ song: Song }> = ({ song }) => {
         <HeartButton size={24} />
       </div>
       <div className='pb-4 text-sm duration-200 cursor-pointer hover:underline text-slate-300 hover:text-white underline-offset-2'>
-        <Link href={`/artist/${song.artistID}`} replace>
+        <Link
+          href={`/artist/${song.artistID}`}
+          replace
+          data-cy={`song-card-artist-name-${song.id}`}
+        >
           {song.artistName}
         </Link>
       </div>
