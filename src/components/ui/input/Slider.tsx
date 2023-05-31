@@ -13,7 +13,7 @@ export const Slider = forwardRef<
     <input
       className={`h-1 bg-slate-700 ${className}`}
       type='range'
-      value={value}
+      value={value || 25}
       max={max}
       onChange={onChange}
       ref={ref}
