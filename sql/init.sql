@@ -26,7 +26,24 @@ alter table artist enable row level security;
 CREATE POLICY "Enable read access for all users" ON "public"."artist"
 AS PERMISSIVE FOR SELECT
 TO public
+USING (true);
+CREATE POLICY "Enable all insert for all users" ON "public"."song"
+AS PERMISSIVE FOR INSERT
+TO public
+WITH CHECK (true);
+CREATE POLICY "Enable all update for all users" ON "public"."song"
+AS PERMISSIVE FOR UPDATE
+TO public
+WITH CHECK (true);
+CREATE POLICY "Enable update for all users" ON "public"."song"
+AS PERMISSIVE FOR UPDATE
+TO public
 USING (true)
+WITH CHECK (true);
+CREATE POLICY "Enable delete for all users" ON "public"."song"
+AS PERMISSIVE FOR DELETE
+TO public
+USING (true);
 
 -- Song table
 CREATE TABLE song (
@@ -41,7 +58,7 @@ alter table song enable row level security;
 CREATE POLICY "Enable read access for all users" ON "public"."song"
 AS PERMISSIVE FOR SELECT
 TO public
-USING (true)
+USING (true);
 
 -- Album table
 CREATE TABLE album (
@@ -55,7 +72,13 @@ alter table album enable row level security;
 CREATE POLICY "Enable read access for all users" ON "public"."album"
 AS PERMISSIVE FOR SELECT
 TO public
-USING (true)
+USING (true);
+
+CREATE POLICY "Enable insert access for all users" ON "public"."album"
+AS PERMISSIVE FOR INSERT
+TO public
+
+WITH CHECK (true);
 
 -- AlbumArtist junction table
 CREATE TABLE album_artist (
@@ -69,7 +92,7 @@ alter table album_artist enable row level security;
 CREATE POLICY "Enable read access for all users" ON "public"."album_artist"
 AS PERMISSIVE FOR SELECT
 TO public
-USING (true)
+USING (true);
 
 -- This trigger automatically creates a profile entry when a new user signs up via Supabase Auth.
 create function public.handle_new_user()
@@ -89,3 +112,13 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+CREATE POLICY "Allow select for all users 13bzqek_0" ON storage.objects FOR SELECT TO public USING (bucket_id = 'songs');
+CREATE POLICY "Allow insert for all users 13bzqek_1" ON storage.objects FOR INSERT TO public WITH CHECK (bucket_id = 'songs');
+CREATE POLICY "Allow update for all users 13bzqek_2" ON storage.objects FOR UPDATE TO public USING (bucket_id = 'songs');
+CREATE POLICY "Allow delete for all users 13bzqek_3" ON storage.objects FOR DELETE TO public USING (bucket_id = 'songs');
+
+CREATE POLICY "Allow select for all users 13bzqek_0" ON storage.objects FOR SELECT TO public USING (bucket_id = 'album_covers');
+CREATE POLICY "Allow insert for all users 13bzqek_1" ON storage.objects FOR INSERT TO public WITH CHECK (bucket_id = 'album_covers');
+CREATE POLICY "Allow update for all users 13bzqek_2" ON storage.objects FOR UPDATE TO public USING (bucket_id = 'album_covers');
+CREATE POLICY "Allow delete for all users 13bzqek_3" ON storage.objects FOR DELETE TO public USING (bucket_id = 'album_covers');

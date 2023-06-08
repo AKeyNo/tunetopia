@@ -26,7 +26,12 @@ export const Sidebar: React.FC<{ className: string }> = ({ className }) => {
           Search
         </SidebarButton>
         <SidebarButton data-cy='sidebar-button-library'>Library</SidebarButton>
-        <SidebarButton data-cy='sidebar-button-upload'>Upload</SidebarButton>
+        <SidebarButton
+          onClick={() => router.push('/upload')}
+          data-cy='sidebar-button-upload'
+        >
+          Upload
+        </SidebarButton>
         <SidebarButton data-cy='sidebar-button-create-a-playlist'>
           Create a Playlist
         </SidebarButton>
