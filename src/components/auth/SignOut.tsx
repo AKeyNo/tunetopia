@@ -1,5 +1,5 @@
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { AuthButton } from './AuthButton';
+import AuthButton from './AuthButton';
 
 export const SignOut: React.FC = () => {
   const supabase = useSupabaseClient();
