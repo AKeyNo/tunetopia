@@ -25,6 +25,14 @@ export interface Song {
   updatedAt: Date | null;
 }
 
+export interface SongToUpload {
+  id: number | null;
+  name: string | null;
+  artistName: string | null;
+  artistID: number | null;
+  file: File | null;
+}
+
 export interface CurrentlyPlaying {
   currentSong: Song;
   playlist: Song[];

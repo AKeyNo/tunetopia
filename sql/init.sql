@@ -93,6 +93,10 @@ CREATE POLICY "Enable read access for all users" ON "public"."album_artist"
 AS PERMISSIVE FOR SELECT
 TO public
 USING (true);
+CREATE POLICY "Enable insert access for all users" ON "public"."artist"
+AS PERMISSIVE FOR INSERT
+TO public
+WITH CHECK (true);
 
 -- This trigger automatically creates a profile entry when a new user signs up via Supabase Auth.
 create function public.handle_new_user()

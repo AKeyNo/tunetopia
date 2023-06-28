@@ -2,11 +2,14 @@ import { Divider } from '@/components/layout/Divider';
 import { FileUpload } from '@/components/ui/input/FileUpload';
 import { SearchInput } from '@/components/ui/input/SearchInput';
 import Image from 'next/image';
-import { useState } from 'react';
-import { Song } from '../../../lib/types/music';
+import { useEffect, useState } from 'react';
+import { Artist, SongToUpload } from '../../../lib/types/music';
 import { Button } from '@/components/buttons/Button';
 import * as jsmediatags from 'jsmediatags';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { SongSummary } from '@/components/song/SongSummary';
+import { GetServerSidePropsContext } from 'next';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 export default function Upload() {
   const supabase = useSupabaseClient();
@@ -15,14 +18,51 @@ export default function Upload() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const [albumTitle, setAlbumTitle] = useState<string>('');
-  const [albumArtists, setAlbumArtists] = useState<string>('');
 
   // store the draft song until it gets put into the songs array
   const [draftSong, setDraftSong] = useState<File | null>(null);
   const [draftSongTitle, setDraftSongTitle] = useState<string>('');
   const [draftSongArtist, setDraftSongArtist] = useState<string>('');
+  const [draftSongArtistID, setDraftSongArtistID] = useState<number | null>();
 
-  const [songs, setSongs] = useState<Song[]>([]);
+  const [songs, setSongs] = useState<SongToUpload[]>([]);
+
+  const [artistsFromSearch, setArtistsFromSearch] = useState<Artist[]>([]);
+
+  const [newlyCreatedArtists, setNewlyCreatedArtists] = useState<
+    { name: string }[]
+  >([]);
+
+  const [songCounter, setSongCounter] = useState<number>(0);
+
+  useEffect(() => {
+    if (draftSongArtistID || draftSongArtist == '') return;
+
+    const quotedArtistName = draftSongArtist
+      .split(' ')
+      .map((word) => `'${word}'`)
+      .join(' & ');
+
+    const searchExistingArtists = setTimeout(async () => {
+      const { data: artistData, error: artistError } = await supabase
+        .from('artist')
+        .select(
+          'artist_id, name, description, image, is_solo, location, year_formed'
+        )
+        .textSearch('name', quotedArtistName);
+
+      if (artistError) {
+        console.error(artistError);
+        return;
+      }
+
+      if (artistData) {
+        setArtistsFromSearch(artistData);
+      }
+    }, 1000);
+
+    return () => clearTimeout(searchExistingArtists);
+  }, [draftSongArtist, draftSongArtistID, supabase]);
 
   const handleAlbumCoverChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -38,43 +78,42 @@ export default function Upload() {
   const handleAddSong = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setDraftSong(file || null);
-    if (file) {
-      jsmediatags.read(file, {
-        onSuccess: function (tag: any) {
-          const { title, artist } = tag.tags;
 
-          console.log(title, artist);
+    if (!file) return;
 
-          setDraftSongTitle(title);
-          setDraftSongArtist(artist);
-        },
-        onError: function (error: any) {
-          console.log(error);
-        },
-      });
-    }
+    jsmediatags.read(file, {
+      onSuccess: function (tag: any) {
+        const { title, artist } = tag.tags;
+
+        setDraftSongTitle(title);
+        setDraftSongArtist(artist);
+        setDraftSongArtistID(null);
+      },
+      onError: function (error: any) {
+        console.error(error);
+      },
+    });
+  };
+
+  const handleAddSongToList = () => {
+    // append the draft song to the songs array
+    const newSong: SongToUpload = {
+      id: songCounter,
+      name: draftSongTitle,
+      artistName: draftSongArtist,
+      artistID: draftSongArtistID || null,
+      file: draftSong,
+    };
+
+    setSongs([...songs, newSong]);
+    setDraftSong(null);
+    setDraftSongTitle('');
+    setDraftSongArtist('');
+    setSongCounter(songCounter + 1);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('uploaded: ', albumCover, 'draft song', draftSong);
-
-    // add the song to songs
-    const newSong: Song = {
-      id: null,
-      artistID: null,
-      albumID: null,
-      name: draftSongTitle,
-      artistName: draftSongArtist,
-      albumName: albumTitle,
-      duration: null,
-      url: null,
-      albumCover: null,
-      createdAt: null,
-      updatedAt: null,
-    };
-
-    setSongs([...songs, newSong]);
 
     const { data: albumData, error: albumError } = await supabase
       .from('album')
@@ -89,10 +128,6 @@ export default function Upload() {
       return console.error(albumError);
     }
 
-    if (albumData) {
-      console.log(albumData);
-    }
-
     const { error } = await supabase.storage
       .from('album_covers')
       .upload(`${albumData[0].album_id}.jpg`, albumCover!);
@@ -101,64 +136,139 @@ export default function Upload() {
       console.error(error);
     }
 
-    // check if the artist exists
     const { data: artistData, error: artistError } = await supabase
       .from('artist')
-      .select('artist_id')
-      .eq('name', draftSongArtist)
-      .single();
+      .insert(newlyCreatedArtists)
+      .select('name, artist_id');
 
     if (artistError) {
-      console.error(artistError);
-      return;
+      return console.error(artistError);
     }
 
-    let artistID: number;
+    for (const song of songs) {
+      console.log('songs', songs);
 
-    if (artistData) {
-      // if the artist exists, use its ID in the songData insert
-      artistID = artistData.artist_id;
-    } else {
-      // if the artist doesn't exist, create a new artist and use its ID in the songData insert
-      const { data: newArtistData, error: newArtistError } = await supabase
-        .from('artist')
-        .insert({ name: draftSongArtist })
+      const matchingArtist = artistData?.find(
+        (artist) => artist.name === song.artistName
+      );
+
+      console.log(matchingArtist, 'matchingArtist');
+
+      const artistID =
+        song.artistID == -1 ? matchingArtist?.artist_id : song.artistID;
+
+      console.log(artistID, 'artistID');
+
+      const { data: songData, error: songError } = await supabase
+        .from('song')
+        .insert([
+          {
+            name: song.name,
+            artist_id: artistID,
+            album_id: albumData[0].album_id,
+          },
+        ])
         .select();
 
-      if (newArtistError) {
-        console.error(newArtistError);
-        return;
+      if (songError) {
+        console.error(songError);
       }
 
-      artistID = newArtistData[0].artist_id;
-    }
+      console.log('song', songData);
 
-    const { data: songData, error: songError } = await supabase
-      .from('song')
-      .insert([
+      const { error: songUploadError } = await supabase.storage
+        .from('songs')
+        .upload(`${songData![0].song_id}.mp3`, song.file!);
+
+      if (songUploadError) {
+        return console.error(songUploadError);
+      }
+    }
+  };
+
+  const renderSongDefinitions = () => {
+    const removeCurrentSong = (id: number) => {
+      const newSongs = songs.filter((song) => song.id !== id);
+      setSongs(newSongs);
+    };
+
+    return (
+      <div>
+        {songs.map((song) => {
+          return (
+            <SongSummary
+              key={song.id}
+              song={song}
+              onClick={removeCurrentSong}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
+  const renderArtistSearch = () => {
+    const checkIfAlreadyCreated =
+      newlyCreatedArtists.length == 0 ||
+      newlyCreatedArtists.every((artist) => artist.name != draftSongArtist);
+
+    return (
+      <ul
+        className={`absolute w-64 overflow-auto text-black bg-white rounded-md select-none max-h-32 duration-200 ${
+          !draftSongArtistID && draftSongArtist != ''
+            ? 'opacity-100'
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        {checkIfAlreadyCreated &&
+          newlyCreatedArtists.map((artist, key) => {
+            return (
+              <li
+                key={key}
+                className='p-2 cursor-pointer hover:bg-gray-200'
+                onClick={() => {
+                  setArtistsFromSearch([]);
+                  setDraftSongArtist(artist.name);
+                  setDraftSongArtistID(-1);
+                }}
+              >
+                {artist.name} (Just Created)
+              </li>
+            );
+          })}
         {
-          name: draftSongTitle,
-          artist_id: artistID,
-          album_id: albumData[0].album_id,
-        },
-      ])
-      .select();
-
-    if (songError) {
-      console.error(songError);
-    }
-
-    if (songData) {
-      console.log('song', songData[0]);
-    }
-
-    const { error: songUploadError } = await supabase.storage
-      .from('songs')
-      .upload(`${songData![0].song_id}.mp3`, draftSong!);
-
-    if (songUploadError) {
-      console.error(songUploadError);
-    }
+          <li
+            className='p-2 cursor-pointer hover:bg-gray-200'
+            onClick={() => {
+              setArtistsFromSearch([]);
+              setDraftSongArtistID(-1);
+              setNewlyCreatedArtists([
+                ...newlyCreatedArtists,
+                { name: draftSongArtist },
+              ]);
+            }}
+          >
+            New Artist ({draftSongArtist})
+          </li>
+        }
+        {artistsFromSearch.map((artist) => {
+          return (
+            <li
+              key={artist.artist_id}
+              className='p-2 cursor-pointer hover:bg-gray-200'
+              onClick={() => {
+                setArtistsFromSearch([]);
+                setDraftSongArtist(artist.name);
+                setDraftSongArtistID(artist.artist_id);
+                console.log('artist_id new: ', artist.artist_id);
+              }}
+            >
+              {artist.name}
+            </li>
+          );
+        })}
+      </ul>
+    );
   };
 
   return (
@@ -198,41 +308,75 @@ export default function Upload() {
             required
             value={albumTitle}
           />
-          <SearchInput
-            label='Album Artist(s)'
-            onChange={setAlbumArtists}
-            data-cy='upload-page-input'
-            required
-            value={albumArtists}
-          />
         </Divider>
-        <Divider heading='Song(s)' subheading=''>
+        <Divider heading='Song Upload' subheading=''>
           <FileUpload
             label='Upload Song'
             handleFileChange={handleAddSong}
             accept='audio/mpeg'
             required
           />
-          <SearchInput
-            label='Song Title'
-            onChange={setDraftSongTitle}
-            data-cy='upload-page-input'
-            required
-            value={draftSongTitle}
-          />
-          <SearchInput
-            label='Artist'
-            onChange={setDraftSongArtist}
-            data-cy='upload-page-input'
-            required
-            value={draftSongArtist}
-          />
+          <div className='my-4'>
+            <SearchInput
+              label='Song Title'
+              onChange={setDraftSongTitle}
+              data-cy='upload-page-input'
+              value={draftSongTitle}
+            />
+            <div className='relative'>
+              <SearchInput
+                label='Artist'
+                onChange={(value) => {
+                  setDraftSongArtistID(null);
+                  setDraftSongArtist(value);
+                }}
+                data-cy='upload-page-input'
+                value={draftSongArtist}
+              />
+              {/* {!draftSongArtistID && draftSongArtist && (
+                <ul className='absolute w-64 overflow-auto text-black bg-white rounded-md select-none max-h-32'>
+                  <li className='p-2'>New Artist</li>
+                  <li className='p-2'>Artist 1</li>
+                  <li className='p-2'>Artist 2</li>
+                  <li className='p-2'>Artist 3</li>
+                </ul>
+              )} */}
+
+              {renderArtistSearch()}
+            </div>
+          </div>
+          {draftSong && (
+            <Button type='button' onClick={handleAddSongToList}>
+              Add Song
+            </Button>
+          )}
         </Divider>
         <Divider heading='Album Summary' subheading=''>
-          <div></div>
-          <Button type='submit'>Submit</Button>
+          {renderSongDefinitions()}
+          {songs.length > 0 && <Button type='submit'>Submit</Button>}
         </Divider>
       </form>
     </div>
   );
 }
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const supabase = createServerSupabaseClient(context);
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: { session } };
+};

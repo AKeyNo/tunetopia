@@ -72,6 +72,12 @@ export default function AlbumPage() {
     setAveragePixelColor(hexColor);
   };
 
+  const displaySongs = () => {
+    return songs.map((song, index) => {
+      return <SongListItem song={song} listNumber={index + 1} key={song.id} />;
+    });
+  };
+
   return (
     <div className='grid w-full h-full grid-rows-2 grid-cols-[16rem_auto] gap-x-4 gap-y-4'>
       <div
@@ -99,7 +105,7 @@ export default function AlbumPage() {
       </div>
       <ol className='z-10 col-span-2'>
         <SongHeaderRow />
-        <SongListItem song={songs[0]} listNumber={1} />
+        {displaySongs()}
       </ol>
     </div>
   );
