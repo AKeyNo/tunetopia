@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@types/jsmediatags": "^3.9.3",
-    "cypress": "^12.9.0"
+    "cypress": "^12.9.0",
+    "cypress-file-upload": "^5.0.8"
   }
 }

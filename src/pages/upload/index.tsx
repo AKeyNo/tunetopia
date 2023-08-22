@@ -10,9 +10,11 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { SongSummary } from '@/components/song/SongSummary';
 import { GetServerSidePropsContext } from 'next';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
 
 export default function Upload() {
   const supabase = useSupabaseClient();
+  const router = useRouter();
 
   const [albumCover, setAlbumCover] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -184,6 +186,9 @@ export default function Upload() {
         return console.error(songUploadError);
       }
     }
+
+    // go to the album page
+    router.push(`/album/${albumData![0].album_id}`);
   };
 
   const renderSongDefinitions = () => {
@@ -219,6 +224,7 @@ export default function Upload() {
             ? 'opacity-100'
             : 'opacity-0 pointer-events-none'
         }`}
+        data-cy='upload-new-artist-list'
       >
         {checkIfAlreadyCreated &&
           newlyCreatedArtists.map((artist, key) => {
@@ -299,12 +305,13 @@ export default function Upload() {
               handleFileChange={handleAlbumCoverChange}
               accept='image/jpeg'
               required
+              data-cy='upload-album-cover'
             />
           </div>
           <SearchInput
             label='Album'
             onChange={setAlbumTitle}
-            data-cy='upload-page-input'
+            data-cy='upload-album-title-input'
             required
             value={albumTitle}
           />
@@ -315,12 +322,13 @@ export default function Upload() {
             handleFileChange={handleAddSong}
             accept='audio/mpeg'
             required
+            data-cy='upload-song-input'
           />
           <div className='my-4'>
             <SearchInput
               label='Song Title'
               onChange={setDraftSongTitle}
-              data-cy='upload-page-input'
+              data-cy='upload-song-title-input'
               value={draftSongTitle}
             />
             <div className='relative'>
@@ -330,7 +338,7 @@ export default function Upload() {
                   setDraftSongArtistID(null);
                   setDraftSongArtist(value);
                 }}
-                data-cy='upload-page-input'
+                data-cy='upload-song-artist-input'
                 value={draftSongArtist}
               />
               {/* {!draftSongArtistID && draftSongArtist && (
@@ -346,14 +354,22 @@ export default function Upload() {
             </div>
           </div>
           {draftSong && (
-            <Button type='button' onClick={handleAddSongToList}>
+            <Button
+              type='button'
+              onClick={handleAddSongToList}
+              data-cy='upload-song-add-song'
+            >
               Add Song
             </Button>
           )}
         </Divider>
         <Divider heading='Album Summary' subheading=''>
           {renderSongDefinitions()}
-          {songs.length > 0 && <Button type='submit'>Submit</Button>}
+          {songs.length > 0 && (
+            <Button type='submit' data-cy='upload-song-submit-button'>
+              Submit
+            </Button>
+          )}
         </Divider>
       </form>
     </div>
