@@ -34,15 +34,16 @@ export const updateSong = createAsyncThunk(
     const { data: songURL } = supabase.storage
       .from('songs')
       .getPublicUrl(songID);
-    const { data: albumCoverURL } = supabase.storage
-      .from('album_covers')
-      .getPublicUrl(songID);
 
     const { data: songData } = await supabase
       .from('song')
       .select('*, artist(name)')
       .eq('song_id', songID)
       .maybeSingle();
+
+    const { data: albumCoverURL } = supabase.storage
+      .from('album_covers')
+      .getPublicUrl(songData?.album_id.toString() || '');
 
     if (!songURL || !songData) throw new Error('Song not found');
 
