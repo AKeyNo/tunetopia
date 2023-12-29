@@ -7,9 +7,13 @@ import { updateIsPlaying } from '../../../lib/slices/currentlyPlayingSlice';
 import { HeartButton } from '../buttons/HeartButton';
 import { Pause, Play } from '@phosphor-icons/react';
 import Link from 'next/link';
+import useContextMenu from '../../../lib/hooks/useContextMenu';
+import ContextMenu from '../layout/ContextMenu';
+import { MenuItem } from '../layout/ContextMenu';
 
 export const SongCard: React.FC<{ song: Song }> = ({ song }) => {
   const dispatch = useAppDispatch();
+  const { contextMenu, handleRightClick, contextMenuRef } = useContextMenu();
   const currentlyPlayingSongID = useAppSelector(
     (state) => state.currentPlaying.currentSong.id
   );
@@ -24,11 +28,34 @@ export const SongCard: React.FC<{ song: Song }> = ({ song }) => {
     (currentlyPlayingSongID === song.id && !isPlaying) ||
     currentlyPlayingSongID !== song.id;
 
+  const menuItems: MenuItem[] = [
+    {
+      id: '1',
+      label: 'Menu Item 1',
+      onClick: () => {
+        console.log('Menu Item 1 clicked');
+      },
+    },
+    {
+      id: '2',
+      label: 'Menu Item 2',
+      onClick: () => {
+        console.log('Menu Item 2 clicked');
+      },
+    },
+  ];
+
   return (
     <div
       className='grid items-center h-20 grid-cols-[5rem_auto_auto] grid-rows-2 w-96 hover:bg-slate-800 b-4 gap-x-4 duration-75'
+      onContextMenu={handleRightClick}
       data-cy={`song-card-${song.id}`}
     >
+      <ContextMenu
+        menuItems={menuItems}
+        contextMenu={contextMenu}
+        contextMenuRef={contextMenuRef}
+      />
       <div
         className='relative w-full h-full row-span-2'
         onMouseEnter={() => setIsHoveringOverAlbumCover(true)}
